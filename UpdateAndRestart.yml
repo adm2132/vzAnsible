@@ -1,6 +1,6 @@
 ---
 - name: Manage Windows Updates
-  hosts: pancake
+  hosts: Pancakes
   gather_facts: false
   vars:
     log_file: "C:\\Windows\\Temp\\update_log.txt"

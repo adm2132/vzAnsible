@@ -1,0 +1,31 @@
+---
+- name: Manage Windows Updates
+  hosts: tlcsd.vizor.cloud
+  gather_facts: false
+  vars:
+    log_file: "C:\\Windows\\Temp\\update_log.txt"
+
+  tasks:
+    - name: Install Windows updates
+      win_updates:
+        category_names:
+          - SecurityUpdates
+          - CriticalUpdates
+          - UpdateRollups
+        state: installed
+        log_path: "{{ log_file }}"
+      register: update_result
+
+    - name: Check if updates were installed
+      win_shell: Get-Content -Path "{{ log_file }}" | Select-String -Pattern "Successfully installed"
+      register: installation_check
+
+    - name: Log update issues
+      win_shell: |
+        $updateIssues = Get-Content -Path "{{ log_file }}" | Select-String -Pattern "failed", "error"
+        if ($updateIssues) {
+          Add-Content -Path "{{ log_file }}" -Value "Issues found during update installation:"
+          Add-Content -Path "{{ log_file }}" -Value $updateIssues
+        } else {
+          Add-Content -Path "{{ log_file }}" -Value "No issues found during update installation."
+        }

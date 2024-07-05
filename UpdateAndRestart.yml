@@ -1,6 +1,6 @@
 ---
 - name: Manage Windows Updates
-  hosts: tlcsd.vizor.cloud
+  hosts: pancake
   gather_facts: false
   vars:
     log_file: "C:\\Windows\\Temp\\update_log.txt"
